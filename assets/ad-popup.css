@@ -1,0 +1,99 @@
+/* ==========================================================================
+   AD / PROMO POPUP — component styles
+   Drop-in on any page: add this stylesheet + assets/ad-popup.js (which
+   injects the markup itself, so no HTML needs to be copied into each
+   page). Uses the site's existing CSS variables, so it matches whichever
+   theme (light/dark) is active automatically.
+   ========================================================================== */
+
+.ad-popup-overlay {
+  position: fixed; inset: 0; z-index: 900;
+  background: rgba(0,0,0,.55);
+  display: flex; align-items: center; justify-content: center; padding: 16px;
+  opacity: 0; pointer-events: none;
+  transition: opacity .25s ease;
+}
+.ad-popup-overlay.open { opacity: 1; pointer-events: auto; }
+
+.ad-popup-box {
+  position: relative; width: 100%; max-width: 360px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.35);
+  overflow: hidden;
+  transform: scale(.9) translateY(10px); opacity: 0;
+  transition: transform .3s cubic-bezier(.22,1,.36,1), opacity .3s ease;
+}
+.ad-popup-overlay.open .ad-popup-box { transform: scale(1) translateY(0); opacity: 1; }
+
+.ad-popup-close {
+  position: absolute; top: 10px; right: 10px; z-index: 2;
+  width: 30px; height: 30px; border-radius: 50%; border: none;
+  background: rgba(0,0,0,.55); color: #fff; font-size: .85rem;
+  display: grid; place-items: center; cursor: pointer;
+  transition: background .2s, transform .15s;
+}
+.ad-popup-close:hover { background: rgba(0,0,0,.75); transform: scale(1.08); }
+
+.ad-popup-img-link { display: block; line-height: 0; background: var(--surface2); }
+.ad-popup-img { width: 100%; height: auto; max-height: 340px; object-fit: cover; display: block; }
+
+.ad-popup-body { padding: 16px; }
+.ad-popup-title { font-family: 'Ekushey Lal Sabuj', sans-serif; font-size: .98rem; font-weight: 800; color: var(--text); margin-bottom: 4px; }
+.ad-popup-desc { font-size: .78rem; color: var(--text-muted); margin-bottom: 14px; line-height: 1.5; }
+
+/* Contact buttons — always one row, side by side */
+.ad-popup-actions { display: flex; gap: 10px; }
+.ad-popup-btn {
+  flex: 1; display: flex; align-items: center; justify-content: center; gap: 7px;
+  padding: 11px 10px; border-radius: 12px; text-decoration: none;
+  font-size: .82rem; font-weight: 700; color: #fff; position: relative; overflow: hidden;
+  transition: transform .15s, box-shadow .15s;
+}
+.ad-popup-btn:hover { transform: translateY(-2px); }
+.ad-popup-btn i { font-size: .95rem; }
+
+.ad-popup-btn.tg { background: linear-gradient(135deg, #2aabee, #229ed9); box-shadow: 0 4px 14px rgba(34,158,217,.35); }
+.ad-popup-btn.tg:hover { box-shadow: 0 8px 22px rgba(34,158,217,.5); }
+.ad-popup-btn.wa { background: linear-gradient(135deg, #25d366, #1fa855); box-shadow: 0 4px 14px rgba(37,211,102,.35); }
+.ad-popup-btn.wa:hover { box-shadow: 0 8px 22px rgba(37,211,102,.5); }
+
+/* Subtle attention-grabbing shine sweeping across each button on a loop */
+.ad-popup-btn::after {
+  content: ''; position: absolute; top: 0; left: -60%; width: 40%; height: 100%;
+  background: linear-gradient(115deg, transparent, rgba(255,255,255,.45), transparent);
+  animation: adBtnShine 2.6s ease-in-out infinite;
+}
+.ad-popup-btn.wa::after { animation-delay: 1.3s; }
+@keyframes adBtnShine {
+  0%   { left: -60%; }
+  35%  { left: 130%; }
+  100% { left: 130%; }
+}
+
+@media (max-width: 380px) {
+  .ad-popup-btn { font-size: .74rem; padding: 10px 6px; }
+}
+
+/* Floating trigger button — click opens the popup on demand, any time */
+.ad-popup-trigger {
+  position: fixed; bottom: 20px; right: 20px; z-index: 500;
+  display: flex; align-items: center; gap: 8px;
+  padding: 13px 18px; border: none; border-radius: 999px; cursor: pointer;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: #fff; font-weight: 700; font-size: .82rem; font-family: Ekushey Lal Sabuj;
+  box-shadow: 0 6px 20px rgba(21,128,61,.4);
+  animation: adTriggerBounce 2.6s ease-in-out infinite;
+}
+.ad-popup-trigger:hover { box-shadow: 0 8px 26px rgba(21,128,61,.55); animation-play-state: paused; }
+.ad-popup-trigger i { font-size: 1rem; }
+.ad-popup-trigger-ring {
+  position: absolute; inset: 0; border-radius: 999px; border: 2px solid var(--accent2);
+  opacity: 0; animation: adTriggerPing 2s ease-out infinite;
+}
+@keyframes adTriggerBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+@keyframes adTriggerPing { 0% { transform: scale(1); opacity: .6; } 100% { transform: scale(1.35); opacity: 0; } }
+
+@media (max-width: 420px) {
+  .ad-popup-trigger { bottom: 16px; right: 16px; padding: 14px; border-radius: 50%; }
+  .ad-popup-trigger-label { display: none; }
+                }

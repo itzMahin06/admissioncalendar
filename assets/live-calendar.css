@@ -1,0 +1,89 @@
+/* ==========================================================================
+   LIVE VISUAL CALENDAR — component styles
+   Used on calendar-only.html. Uses the same CSS variables (--surface,
+   --border, --primary, --accent2, --text, --text-muted, etc.) already
+   defined in assets/common.css, so it automatically matches whichever
+   theme (light/dark) is active — no separate light/dark rules needed here.
+   ========================================================================== */
+
+/* "Live ক্যালেন্ডার ভিউ" scroll-to button, next to the back-home link */
+.lc-view-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 9px 16px; border-radius: 10px; text-decoration: none;
+  font-size: .82rem; font-weight: 700; color: #fff;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  box-shadow: 0 4px 14px rgba(21,128,61,.3);
+  transition: transform .15s, box-shadow .15s;
+}
+.lc-view-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(21,128,61,.4); }
+
+/* Section wrapper */
+.live-cal-section {
+  margin: 30px 0 20px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 18px;
+  padding: 18px;
+  /* Offsets the sticky header height so the smooth-scroll target lands
+     with the section heading fully visible, not tucked under the header. */
+  scroll-margin-top: 74px;
+}
+.live-cal-head { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 6px; }
+.live-cal-head h2 { font-family: 'Ekushey Lal Sabuj', sans-serif; font-size: 1.05rem; font-weight: 800; color: var(--text); display: flex; align-items: center; gap: 9px; }
+.live-cal-head h2 i { color: var(--primary-hi); }
+.live-cal-hint { font-size: .78rem; color: var(--text-muted); margin: 4px 0 16px; line-height: 1.6; }
+
+/* Month navigation */
+.live-cal-nav { display: flex; align-items: center; gap: 10px; }
+.lc-nav-btn {
+  width: 30px; height: 30px; border-radius: 8px; border: 1px solid var(--border);
+  background: var(--surface2); color: var(--text); cursor: pointer;
+  display: grid; place-items: center; font-size: .78rem;
+  transition: border-color .2s, color .2s;
+}
+.lc-nav-btn:hover { border-color: var(--primary-hi); color: var(--primary-hi); }
+.lc-month-label { font-weight: 700; font-size: .88rem; color: var(--text); min-width: 130px; text-align: center; }
+
+/* Weekday header row */
+.live-cal-weekdays {
+  display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px;
+  margin-bottom: 6px;
+}
+.live-cal-weekdays span {
+  text-align: center; font-size: .68rem; font-weight: 700; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: .03em;
+}
+
+/* Day grid */
+.live-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+.lc-day {
+  min-height: 78px; border-radius: 10px; border: 1px solid var(--border);
+  background: var(--surface2); padding: 6px; display: flex; flex-direction: column; gap: 3px;
+  overflow: hidden;
+}
+.lc-day.lc-empty { background: transparent; border-color: transparent; }
+.lc-daynum { font-size: .74rem; font-weight: 700; color: var(--text-muted); }
+
+/* Today */
+.lc-day.lc-today { border-color: var(--primary); box-shadow: inset 0 0 0 1px var(--primary); }
+.lc-day.lc-today .lc-daynum { color: var(--primary-hi); }
+
+/* Days that have an exam scheduled */
+.lc-day.has-exam { background: color-mix(in srgb, var(--accent2) 10%, var(--surface2)); border-color: var(--accent2); }
+.lc-day.has-exam .lc-daynum { color: var(--accent2); }
+
+/* University/unit name tags inside a day cell */
+.lc-tags { display: flex; flex-direction: column; gap: 2px; overflow: hidden; }
+.lc-tag {
+  font-size: .4rem; line-height: 1.3; font-weight: 400; color: #fff;
+  background: var(--primary); border-radius: 4px; padding: 1px 4px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.lc-more { font-size: .3rem; font-weight: 400; color: var(--text-muted); padding: 0 2px; }
+
+@media (max-width: 560px) {
+  .lc-day { min-height: 58px; padding: 4px; border-radius: 8px; }
+  .lc-daynum { font-size: .64rem; }
+  .lc-tag { font-size: .4rem; padding: 1px 3px; }
+  .lc-more { font-size: .3rem; }
+  .live-cal-weekdays span { font-size: .58rem; }
+  .lc-month-label { min-width: 100px; font-size: .8rem; }
+}
