@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="bn" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ভিডিও লাইব্রেরি - Admission Calendar</title>
+  <meta name="description" content="Admission Calendar-এর সব ইউটিউব ভিডিও এক জায়গায় — ভর্তি পরীক্ষা সংক্রান্ত টিউটোরিয়াল, আপডেট ও গাইডলাইন।">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://admissioncalender.vercel.app/videos.html">
+  <meta name="theme-color" content="#15803d">
+
+  <script>
+    try {
+      document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');
+    } catch (e) {}
+  </script>
+
+  <link rel="icon" href="favicon.ico">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.maateen.me/bangla/font.css" rel="stylesheet">
+  <link href="https://fonts.maateen.me/solaiman-lipi/font.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="assets/common.css">
+
+  <style>
+    .videos-page-head { text-align: center; margin: 26px 0 22px; }
+    .videos-page-head h1 { font-family: 'Ekushey Lal Sabuj', sans-serif; font-size: 1.3rem; font-weight: 800; color: var(--text); display: flex; align-items: center; justify-content: center; gap: 10px; }
+    .videos-page-head h1 i { color: #ff0000; }
+    .videos-page-head p { font-size: .82rem; color: var(--text-muted); margin-top: 6px; }
+
+    /* Always 3 per row — adding more videos just adds rows, never widens
+       or breaks the page. */
+    .videos-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 30px; }
+    .video-card {
+      border-radius: 14px; overflow: hidden; background: var(--surface); border: 1px solid var(--border);
+      text-decoration: none; color: var(--text); cursor: pointer;
+      transition: transform .2s, border-color .2s, box-shadow .2s;
+      opacity: 0; animation: fadeUp .5s both;
+    }
+    .video-card:hover { transform: translateY(-4px); border-color: var(--primary-hi); box-shadow: 0 10px 26px rgba(21,128,61,.18); }
+    .video-card .thumb-wrap { position: relative; aspect-ratio: 16/9; overflow: hidden; background: var(--surface2); }
+    .video-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .video-card .play-badge { position: absolute; inset: 0; display: grid; place-items: center; background: linear-gradient(0deg, rgba(0,0,0,.4), transparent 55%); }
+    .video-card .play-badge i {
+      width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,.94); color: #cc0000;
+      display: grid; place-items: center; font-size: .95rem; box-shadow: 0 3px 10px rgba(0,0,0,.35);
+      transition: transform .2s;
+    }
+    .video-card:hover .play-badge i { transform: scale(1.15); }
+    .video-card-title { font-size: .82rem; font-weight: 700; padding: 10px 12px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+    .videos-empty { text-align: center; padding: 50px 16px; color: var(--text-muted); }
+    .videos-empty i { font-size: 2rem; margin-bottom: 10px; color: var(--border-hi); }
+
+    .videos-skel { aspect-ratio: 16/9; background: linear-gradient(90deg, var(--surface2) 25%, var(--surface) 50%, var(--surface2) 75%); background-size: 200% 100%; animation: skelShine 1.4s ease-in-out infinite; border-radius: 14px; }
+    @keyframes skelShine { to { background-position: -200% 0; } }
+
+    @media (max-width: 720px) { .videos-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; } }
+    @media (max-width: 420px) {
+      .videos-grid { grid-template-columns: repeat(1, 1fr); }
+      .video-card .play-badge i { width: 34px; height: 34px; font-size: .82rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="bg-canvas" aria-hidden="true">
+  <div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div>
+</div>
+
+<div id="site-header"></div>
+
+<div id="app">
+  <div class="videos-page-head">
+    <h1><i class="fa-brands fa-youtube"></i> ভিডিও লাইব্রেরি</h1>
+    <p>ভর্তি পরীক্ষা সংক্রান্ত সব আপডেট ও গাইডলাইন ভিডিও এক জায়গায়</p>
+  </div>
+
+  <div class="videos-grid" id="videosGrid">
+    <div class="videos-skel"></div>
+    <div class="videos-skel"></div>
+    <div class="videos-skel"></div>
+  </div>
+</div>
+
+<div id="site-footer"></div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="/api/firebase-config.js"></script>
+<script src="assets/firebase-config.js"></script>
+<script src="assets/common.js"></script>
+<script>
+  async function loadVideosPage() {
+    const grid = document.getElementById('videosGrid');
+    try {
+      const videos = await getCachedCollection('videos', async () => {
+        const snap = await db.collection('videos').orderBy('order', 'asc').get();
+        return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      });
+
+      if (!videos.length) {
+        grid.outerHTML = `<div class="videos-empty"><i class="fa-brands fa-youtube"></i><p>এখনো কোনো ভিডিও যোগ করা হয়নি।</p></div>`;
+        return;
+      }
+
+      grid.innerHTML = videos.map((v, i) => `
+        <a href="${esc(v.url)}" target="_blank" class="video-card" style="animation-delay:${i * .06}s">
+          <div class="thumb-wrap">
+            <img src="${esc(v.thumb)}" alt="${esc(v.title)}" loading="lazy">
+            <div class="play-badge"><i class="fa-solid fa-play"></i></div>
+          </div>
+          <div class="video-card-title">${esc(v.title)}</div>
+        </a>`).join('');
+    } catch (err) {
+      console.error('Failed to load videos:', err);
+      grid.outerHTML = `<div class="videos-empty"><i class="fa-solid fa-triangle-exclamation"></i><p>ভিডিও লোড করতে সমস্যা হয়েছে, একটু পর আবার চেষ্টা করুন।</p></div>`;
+    }
+  }
+  document.addEventListener('DOMContentLoaded', loadVideosPage);
+</script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Private/account pages — kept out of crawling via <meta name="robots"
+# content="noindex"> on the pages themselves (login.html, register.html,
+# profile.html, admin.html) rather than Disallow here, so Google can still
+# see the noindex tag and cleanly drop them if they were ever indexed.
+
+Sitemap: https://admissioncalender.maahin.my.id/sitemap.xml

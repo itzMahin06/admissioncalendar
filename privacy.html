@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="bn" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>প্রাইভেসি পলিসি - Admission Calendar</title>
+  <meta name="description" content="Admission Calendar-এর প্রাইভেসি পলিসি — আমরা কীভাবে আপনার তথ্য সংগ্রহ ও ব্যবহার করি তা জানুন।">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://admissioncalender.vercel.app/privacy.html">
+  <link rel="icon" href="favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.maateen.me/solaiman-lipi/font.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="assets/common.css">
+  <style>
+    .policy-block { margin-bottom: 20px; }
+    .policy-block h2 { font-size: 1rem; margin-bottom: 8px; color: var(--primary-hi); }
+    .policy-block p, .policy-block li { font-size: .88rem; color: var(--text-muted); line-height: 1.8; }
+    .policy-block ul { padding-left: 20px; margin-top: 6px; }
+  </style>
+</head>
+<body>
+<div class="bg-canvas" aria-hidden="true"><div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div></div>
+<div id="site-header"></div>
+
+<div id="app">
+  <h1 class="page-title"><i class="fa-solid fa-shield-halved"></i> প্রাইভেসি পলিসি</h1>
+  <p class="page-sub">সর্বশেষ আপডেটঃ জুলাই ২০২৬</p>
+
+  <div class="card">
+    <div class="policy-block">
+      <h2>আমরা কী তথ্য সংগ্রহ করি</h2>
+      <p>আপনি যখন অ্যাকাউন্ট তৈরি করেন, তখন আমরা সংগ্রহ করিঃ</p>
+      <ul>
+        <li>নাম, ইউজারনেম, ইমেইল ঠিকানা</li>
+        <li>SSC ও HSC জিপিএ এবং মোট মার্ক (ঐচ্ছিক)</li>
+        <li>গুগল দিয়ে সাইন ইন করলে আপনার নাম, ইমেইল ও প্রোফাইল ছবি</li>
+        <li>আপনার বুকমার্ক করা বিশ্ববিদ্যালয়ের তালিকা</li>
+      </ul>
+    </div>
+    <div class="policy-block">
+      <h2>তথ্য কীভাবে ব্যবহার করা হয়</h2>
+      <p>সংগৃহীত তথ্য শুধুমাত্র আপনার প্রোফাইল ব্যবস্থাপনা, বুকমার্ক ফিচার এবং আপনার জিপিএ অনুযায়ী উপযুক্ত বিশ্ববিদ্যালয়ের
+      সাজেশন দেখানোর জন্য ব্যবহৃত হয়। আমরা কোনো তৃতীয় পক্ষের কাছে আপনার ব্যক্তিগত তথ্য বিক্রি করি না।</p>
+    </div>
+    <div class="policy-block">
+      <h2>ডাটা সংরক্ষণ</h2>
+      <p>আপনার সকল তথ্য Google Firebase (Firestore ও Authentication) এ নিরাপদে সংরক্ষণ করা হয়, যা ইন্ডাস্ট্রি-স্ট্যান্ডার্ড
+      এনক্রিপশন ও নিরাপত্তা ব্যবস্থা ব্যবহার করে।</p>
+    </div>
+    <div class="policy-block">
+      <h2>আপনার অধিকার</h2>
+      <p>আপনি যেকোনো সময় আপনার প্রোফাইল থেকে নিজের তথ্য এডিট করতে পারবেন। অ্যাকাউন্ট বা ডাটা মুছে ফেলতে চাইলে আমাদের
+      টেলিগ্রাম গ্রুপে বা ইমেইলে যোগাযোগ করুন।</p>
+    </div>
+    <div class="policy-block">
+      <h2>যোগাযোগ</h2>
+      <p>প্রাইভেসি সংক্রান্ত কোনো প্রশ্ন থাকলে আমাদের <a href="contact.html" style="color:var(--primary-hi);font-weight:700;">যোগাযোগ পেজ</a> থেকে যোগাযোগ করুন।</p>
+    </div>
+  </div>
+</div>
+
+<div id="site-footer"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="/api/firebase-config.js"></script>
+<script src="assets/firebase-config.js"></script>
+<script src="assets/common.js"></script>
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="bn" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>University Admission Calendar Table | HSC Admission Date & Exam Time</title>
+  <meta name="description" content="বাংলাদেশের সকল বিশ্ববিদ্যালয়ের admission calendar টেবিল আকারে — application deadline, exam date, university admission time ও admit card status এক নজরে।">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://admissioncalender.vercel.app/calendar-only.html">
+
+  <meta property="og:site_name" content="Admission Calendar">
+  <meta property="og:title" content="University Admission Calendar Table | HSC Admission Date & Exam Time">
+  <meta property="og:description" content="বাংলাদেশের সকল বিশ্ববিদ্যালয়ের ভর্তি পরীক্ষার ডেডলাইন, পরীক্ষার তারিখ ও admission time — শুধু টেবিল, কোনো বিভ্রান্তি ছাড়া।">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://admissioncalender.vercel.app/calendar-only.html">
+  <meta property="og:image" content="https://admissioncalender.vercel.app/apple-touch-icon.png">
+  <meta property="og:locale" content="bn_BD">
+  <meta name="theme-color" content="#15803d">
+
+  <link rel="icon" href="favicon.ico">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.maateen.me/bangla/font.css" rel="stylesheet">
+  <link href="https://fonts.maateen.me/solaiman-lipi/font.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+ <link rel="stylesheet" href="assets/ad-popup.css">  
+          
+  <script>
+    // Runs before CSS loads so the correct theme applies on first paint —
+    // fixes the dark/light flash when navigating between pages.
+    try {
+      document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');
+    } catch (e) {}
+  </script>
+  <link rel="stylesheet" href="assets/common.css">
+<link rel="stylesheet" href="assets/live-calendar.css">
+  
+  <style>
+    .tbl-application th:nth-child(1), .tbl-application td:nth-child(1) { width: 34px; text-align:center; }
+    .tbl-application th:nth-child(2), .tbl-application td:nth-child(2) { width: 22%; }
+    .tbl-application th:nth-child(3), .tbl-application td:nth-child(3) { width: 22%; }
+    .tbl-application th:nth-child(4), .tbl-application td:nth-child(4) { width: 24%; }
+    .tbl-application th:nth-child(5), .tbl-application td:nth-child(5) { width: 20%; }
+    .tbl-exam th:nth-child(1), .tbl-exam td:nth-child(1) { width: 30%; }
+    .tbl-info th:nth-child(3), .tbl-info td:nth-child(3) { text-align: center; }
+    .tbl-info th:nth-child(4), .tbl-info td:nth-child(4) { text-align: center; }
+    .back-home-link { display: inline-flex; align-items: center; gap: 7px; font-size: .82rem; font-weight: 700; color: var(--text-muted); text-decoration: none; margin: 16px 0 10px; }
+    .back-home-link:hover { color: var(--primary-hi); }
+  </style>
+</head>
+<body>
+
+<div class="bg-canvas" aria-hidden="true">
+  <div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div>
+</div>
+
+<div id="site-header"></div>
+
+<div id="app">
+
+  <div class="cal-top-actions">
+    <a href="index.html" class="back-home-link"><i class="fa-solid fa-arrow-left"></i> হোমপেজে ফিরুন</a>
+    <a href="#liveCalendarSection" class="lc-view-btn"><i class="fa-solid fa-calendar-days"></i> লাইভ ক্যালেন্ডার ভিউ</a>
+  </div>
+
+  <!-- Distraction-free view: just the calendar tabs + table, no profile
+       card, no "Latest Updates" videos, no intro text — for anyone who
+       just wants to check dates quickly. -->
+  <div class="tabs-wrapper">
+    <div class="tab-nav" role="tablist">
+      <button class="tab-btn active" data-tab="application" role="tab"><i class="fa-solid fa-pen-to-square"></i> আবেদন</button>
+      <button class="tab-btn" data-tab="exam" role="tab"><i class="fa-solid fa-file-signature"></i> পরীক্ষা</button>
+      <button class="tab-btn" data-tab="info" role="tab"><i class="fa-solid fa-circle-info"></i> অন্যান্য</button>
+      <button class="tab-btn" data-tab="result" role="tab"><i class="fa-solid fa-square-poll-vertical"></i> ফলাফল</button>
+    </div>
+
+    <div class="tab-panel active" id="panel-application">
+      <div class="alert info"><i class="fa-solid fa-bookmark"></i> বুকমার্ক আইকনে ক্লিক করে আপনার পছন্দের বিশ্ববিদ্যালয় সেভ করুন (লগ ইন প্রয়োজন)।</div>
+      <div class="table-wrap">
+        <table class="tbl-application">
+          <thead><tr><th></th><th>বিশ্ববিদ্যালয়</th><th>আবেদন লিংক</th><th>ডেডলাইন</th><th>অবশিষ্ট সময়</th></tr></thead>
+          <tbody id="body-application"><tr class="skeleton-row"><td></td><td></td><td></td><td></td><td></td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="panel-exam">
+      <div class="alert"><i class="fa-solid fa-bell"></i> কোনো বিশ্ববিদ্যালয়ের তথ্য মিসিং/ভুল থাকলে আমাদের টেলিগ্রাম গ্রুপে মেসেজ দিন।</div>
+      <div class="table-wrap">
+        <table class="tbl-exam">
+          <thead><tr><th>বিশ্ববিদ্যালয়</th><th>ইউনিট</th><th>প্রবেশপত্র</th><th>পরীক্ষার তারিখ</th><th>অবশিষ্ট সময়</th></tr></thead>
+          <tbody id="body-exam"><tr class="skeleton-row"><td></td><td></td><td></td><td></td><td></td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="panel-info">
+      <div class="alert"><i class="fa-solid fa-bell"></i> কোনো বিশ্ববিদ্যালয়ের তথ্য মিসিং/ভুল থাকলে আমাদের টেলিগ্রাম গ্রুপে মেসেজ দিন।</div>
+      <div class="table-wrap">
+        <table class="tbl-info">
+          <thead><tr><th>বিশ্ববিদ্যালয়</th><th>নেগেটিভ</th><th>ক্যালকুলেটর</th><th>সেকেন্ড টাইম</th><th>সার্কুলার</th></tr></thead>
+          <tbody id="body-info"><tr class="skeleton-row"><td></td><td></td><td></td><td></td><td></td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="panel-result">
+      <div class="alert"><i class="fa-solid fa-bell"></i> কোনো বিশ্ববিদ্যালয়ের তথ্য মিসিং/ভুল থাকলে আমাদের টেলিগ্রাম গ্রুপে মেসেজ দিন।</div>
+      <div class="table-wrap">
+        <table class="tbl-result">
+          <thead><tr><th>বিশ্ববিদ্যালয়</th><th>ফলাফলের তারিখ</th><th>ফলাফল লিংক</th></tr></thead>
+          <tbody id="body-result"><tr class="skeleton-row"><td></td><td></td><td></td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <section id="liveCalendarSection" class="live-cal-section">
+    <div class="live-cal-head">
+      <h2><i class="fa-solid fa-calendar-days"></i> লাইভ ক্যালেন্ডার — পরীক্ষা</h2>
+      <div class="live-cal-nav">
+        <button id="lcPrev" class="lc-nav-btn" aria-label="আগের মাস" type="button"><i class="fa-solid fa-chevron-left"></i></button>
+        <span id="lcMonthLabel" class="lc-month-label"></span>
+        <button id="lcNext" class="lc-nav-btn" aria-label="পরের মাস" type="button"><i class="fa-solid fa-chevron-right"></i></button>
+      </div>
+    </div>
+    <p class="live-cal-hint">যেসব বিশ্ববিদ্যালয়/ইউনিটের পরীক্ষার তারিখ ও সময় নির্ধারিত আছে, সেগুলো ক্যালেন্ডারের নির্দিষ্ট তারিখের ঘরে দেখা যাবে।</p>
+    <div class="live-cal-weekdays">
+      <span>রবি</span><span>সোম</span><span>মঙ্গল</span><span>বুধ</span><span>বৃহঃ</span><span>শুক্র</span><span>শনি</span>
+    </div>
+    <div id="liveCalGrid" class="live-cal-grid"></div>
+  </section>
+</div>
+
+<div id="site-footer"></div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="/api/firebase-config.js"></script>
+<script src="assets/firebase-config.js"></script>
+<script src="assets/common.js"></script>
+<script src="assets/calendar.js"></script>
+  <script src="assets/ad-popup.js"></script>
+</body>
+</html>

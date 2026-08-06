@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="bn" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>অ্যাডমিন প্যানেল - Admission Calendar</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.maateen.me/solaiman-lipi/font.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <script>
+    // Runs before CSS loads so the correct theme applies on first paint —
+    // fixes the dark/light flash when navigating between pages.
+    try {
+      document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');
+    } catch (e) {}
+  </script>
+  <link rel="stylesheet" href="assets/common.css">
+  <style>
+    .admin-tabs { display: flex; gap: 8px; margin: 22px 0 16px; flex-wrap: wrap; }
+    .a-tab { padding: 9px 16px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface); color: var(--text-muted); font-family: inherit; font-size: .82rem; font-weight: 700; cursor: pointer; }
+    .a-tab.active { background: linear-gradient(135deg, var(--primary), #5b21b6); color: #fff; border-color: transparent; }
+    .admin-section { display: none; }
+    .admin-section.active { display: block; animation: fadeUp .4s both; }
+    .toolbar { display: flex; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; align-items: center; justify-content: space-between; }
+    .toolbar input { max-width: 260px; }
+    .user-toolbar { justify-content: flex-start; }
+    .user-toolbar input { flex: 1 1 220px; }
+    .user-toolbar select {
+      padding: 9px 10px; border-radius: 10px; border: 1px solid var(--border);
+      background: var(--surface2); color: var(--text); font-family: inherit; font-size: .78rem;
+      flex: 0 0 auto;
+    }
+    .user-toolbar #addUserBtn { margin-left: auto; }
+
+    /* Overview stat pills */
+    .user-stats { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+    .user-stat-card {
+      flex: 1 1 130px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+      padding: 12px 14px; display: flex; flex-direction: column; gap: 3px;
+    }
+    .user-stat-card .num { font-family: 'Ekushey Lal Sabuj', sans-serif; font-size: 1.3rem; font-weight: 800; color: var(--text); }
+    .user-stat-card .lbl { font-size: .72rem; color: var(--text-muted); font-weight: 600; }
+    .user-stat-card.accent .num { color: var(--primary-hi); }
+
+    /* Redesigned user row */
+    .u-cell { display: flex; align-items: center; gap: 10px; }
+    .u-avatar {
+      width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
+      background: linear-gradient(135deg, var(--primary), var(--accent)); color: #fff;
+      display: grid; place-items: center; font-weight: 800; font-size: .8rem; text-transform: uppercase;
+    }
+    .u-name { font-weight: 700; font-size: .84rem; color: var(--text); }
+    .u-sub { font-size: .7rem; color: var(--text-muted); margin-top: 1px; }
+    .gpa-badge { display: inline-block; font-size: .74rem; font-weight: 700; color: var(--text); }
+    .gpa-badge .lbl { color: var(--text-muted); font-weight: 500; font-size: .68rem; }
+    .bookmark-pill {
+      display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border-radius: 99px;
+      font-size: .72rem; font-weight: 700; background: var(--surface2); color: var(--text-muted);
+    }
+    .bookmark-pill.has { color: var(--accent2); background: rgba(217,119,6,.12); }
+    .notif-status { font-size: .95rem; }
+    .notif-status.on { color: var(--accent); }
+    .notif-status.off { color: var(--text-muted); opacity: .5; }
+
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 500; display: none; align-items: flex-start; justify-content: center; padding: 30px 14px; overflow-y: auto; }
+    .modal-overlay.open { display: flex; }
+    .modal-box { background: var(--bg2); border: 1px solid var(--border); border-radius: 18px; padding: 24px; max-width: 560px; width: 100%; box-shadow: var(--shadow); animation: fadeUp .3s both; }
+    .modal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .modal-head h3 { font-family: 'Ekushey Lal Sabuj', sans-serif; font-size: 1.05rem; }
+    .modal-close { background: none; border: none; color: var(--text-muted); font-size: 1.2rem; cursor: pointer; }
+
+    .unit-row { border: 1px solid var(--border); border-radius: 12px; padding: 12px; margin-bottom: 10px; background: var(--surface2); position: relative; }
+    .unit-row .form-row { margin-bottom: 10px; }
+    .unit-row .form-row:last-of-type { margin-bottom: 0; }
+    .unit-row-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: .78rem; font-weight: 700; color: var(--text-muted); }
+    .remove-unit-btn { background: none; border: none; color: var(--no); cursor: pointer; font-size: .85rem; padding: 4px 6px; }
+
+    .video-admin-card { display: flex; gap: 12px; align-items: center; border: 1px solid var(--border); border-radius: 12px; padding: 10px; margin-bottom: 10px; background: var(--surface); }
+    .video-admin-card img { width: 96px; height: 54px; object-fit: cover; border-radius: 8px; flex-shrink: 0; background: var(--surface2); }
+    .video-admin-card .v-title { font-weight: 700; font-size: .86rem; margin-bottom: 3px; }
+    .video-admin-card .v-url { font-size: .74rem; color: var(--text-muted); word-break: break-all; }
+    .video-admin-card .v-actions { display: flex; gap: 6px; margin-left: auto; flex-shrink: 0; }
+
+    .notif-block { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 18px; margin-bottom: 16px; }
+    .notif-block h3 { font-size: .94rem; font-weight: 800; display: flex; align-items: center; gap: 8px; margin-bottom: 6px; color: var(--text); }
+    .notif-block h3 i { color: var(--primary-hi); }
+    .notif-block-sub { font-size: .78rem; color: var(--text-muted); margin-bottom: 14px; line-height: 1.5; }
+  </style>
+</head>
+<body>
+<div class="bg-canvas" aria-hidden="true"><div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div></div>
+<div id="site-header"></div>
+
+<div id="app" class="wide">
+  <div class="loading-block" id="adminLoading"><span class="spinner" style="border-top-color:var(--primary-hi);width:26px;height:26px;"></span><p style="margin-top:10px;">যাচাই করা হচ্ছে...</p></div>
+
+  <div id="adminContent" style="display:none;">
+    <h1 class="page-title"><i class="fa-solid fa-user-shield"></i> অ্যাডমিন প্যানেল</h1>
+    <p class="page-sub">বিশ্ববিদ্যালয় ও ইউজার ম্যানেজ করুন</p>
+
+    <div class="admin-tabs">
+      <button class="a-tab active" data-target="unis">বিশ্ববিদ্যালয়সমূহ</button>
+      <button class="a-tab" data-target="users">ইউজারসমূহ</button>
+      <button class="a-tab" data-target="videos">লেটেস্ট আপডেট (ভিডিও)</button>
+      <button class="a-tab" data-target="notif">নোটিফিকেশন</button>
+    </div>
+
+    <!-- UNIVERSITIES -->
+    <div class="admin-section active" id="asec-unis">
+      <div class="toolbar">
+        <input type="text" id="uniSearch" placeholder="নাম দিয়ে খুঁজুন...">
+        <button class="btn btn-primary btn-sm" id="addUniBtn"><i class="fa-solid fa-plus"></i> নতুন বিশ্ববিদ্যালয়</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>নাম</th><th>ডেডলাইন</th><th>পরীক্ষার তারিখ</th><th>প্রয়োজনীয় জিপিএ</th><th>স্ট্যাটাস</th><th>অ্যাকশন</th></tr></thead>
+          <tbody id="uniTableBody"><tr class="skeleton-row"><td colspan="6"></td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- USERS -->
+    <div class="admin-section" id="asec-users">
+      <div class="user-stats" id="userStats"></div>
+
+      <div class="toolbar user-toolbar">
+        <input type="text" id="userSearch" placeholder="নাম, ইউজারনেম বা ইমেইল দিয়ে খুঁজুন...">
+        <select id="userRoleFilter">
+          <option value="">সব রোল</option>
+          <option value="admin">অ্যাডমিন</option>
+          <option value="user">ইউজার</option>
+        </select>
+        <select id="userProfileFilter">
+          <option value="">সব প্রোফাইল</option>
+          <option value="complete">প্রোফাইল সম্পূর্ণ</option>
+          <option value="incomplete">প্রোফাইল অসম্পূর্ণ</option>
+        </select>
+        <select id="userBookmarkFilter">
+          <option value="">সব বুকমার্ক</option>
+          <option value="has">বুকমার্ক আছে</option>
+          <option value="none">বুকমার্ক নেই</option>
+        </select>
+        <select id="userNotifFilter">
+          <option value="">সব নোটিফিকেশন</option>
+          <option value="on">চালু আছে</option>
+          <option value="off">বন্ধ আছে</option>
+        </select>
+        <select id="userSort">
+          <option value="name">নাম (A-Z)</option>
+          <option value="bookmarks">বুকমার্ক (বেশি আগে)</option>
+          <option value="gpa">GPA (বেশি আগে)</option>
+        </select>
+        <button class="btn btn-primary btn-sm" id="addUserBtn"><i class="fa-solid fa-plus"></i> প্রোফাইল যোগ করুন</button>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>ইউজার</th><th>জিপিএ</th><th>বুকমার্ক</th><th>নোটিফিকেশন</th><th>রোল</th><th>অ্যাকশন</th></tr></thead>
+          <tbody id="userTableBody"><tr class="skeleton-row"><td colspan="6"></td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- VIDEOS (Latest Updates) -->
+    <div class="admin-section" id="asec-videos">
+      <div class="alert info"><i class="fa-solid fa-circle-info"></i> শুধু YouTube ভিডিও লিংক পেস্ট করুন — থাম্বনেইল ও টাইটেল স্বয়ংক্রিয়ভাবে যুক্ত হয়ে যাবে। হোমপেজে "Latest Updates" সেকশনে এটি দেখাবে।</div>
+      <div class="form-row" style="align-items:flex-end;">
+        <div class="form-group" style="margin-bottom:0;"><label>YouTube ভিডিও লিংক</label><input type="text" id="videoUrlInput" placeholder="https://www.youtube.com/watch?v=..."></div>
+        <button type="button" class="btn btn-primary" id="addVideoBtn" style="height:44px;"><i class="fa-solid fa-plus"></i> যোগ করুন</button>
+      </div>
+      <div id="videoAdminList" style="margin-top:18px;"></div>
+    </div>
+
+    <!-- NOTIFICATIONS -->
+    <div class="admin-section" id="asec-notif">
+      <div class="notif-block">
+        <h3><i class="fa-solid fa-bell"></i> আবেদন রিমাইন্ডার পাঠান</h3>
+        <p class="notif-block-sub">যারা এই বিশ্ববিদ্যালয় বুকমার্ক করে রেখেছে এবং নোটিফিকেশন চালু আছে, তারা এখনই একটা রিমাইন্ডার পাবে।</p>
+        <div class="form-row" style="align-items:flex-end;">
+          <div class="form-group" style="margin-bottom:0;flex:1;"><label>বিশ্ববিদ্যালয়</label><select id="applyNotifUni"></select></div>
+          <button type="button" class="btn btn-primary" id="sendApplyNotifBtn" style="height:44px;"><i class="fa-solid fa-paper-plane"></i> পাঠান</button>
+        </div>
+      </div>
+
+      <div class="notif-block">
+        <h3><i class="fa-solid fa-file-signature"></i> পরীক্ষার রিমাইন্ডার পাঠান</h3>
+        <p class="notif-block-sub">নির্দিষ্ট বিশ্ববিদ্যালয় ও ইউনিট বেছে নিন — শুধু ওই ইউনিটের বুকমার্ককারীরা পাবে।</p>
+        <div class="form-row">
+          <div class="form-group"><label>বিশ্ববিদ্যালয়</label><select id="examNotifUni"></select></div>
+          <div class="form-group"><label>ইউনিট</label><select id="examNotifUnit"></select></div>
+        </div>
+        <button type="button" class="btn btn-primary" id="sendExamNotifBtn"><i class="fa-solid fa-paper-plane"></i> পাঠান</button>
+      </div>
+
+      <div class="notif-block">
+        <h3><i class="fa-solid fa-bullhorn"></i> কাস্টম রিমাইন্ডার</h3>
+        <p class="notif-block-sub">এই মেসেজ <strong>সবাইকে</strong> পাঠানো হবে — সাইন ইন করা ইউজার এবং যারা অ্যাকাউন্ট ছাড়াই নোটিফিকেশন চালু করেছে (নন-ইউজার), সবাই পাবে।</p>
+        <div class="form-group"><label>টাইটেল</label><input type="text" id="customNotifTitle" placeholder="যেমনঃ নতুন বিশ্ববিদ্যালয় যোগ হয়েছে!"></div>
+        <div class="form-group"><label>মেসেজ</label><textarea id="customNotifMsg" rows="3" placeholder="আপনার মেসেজ লিখুন..."></textarea></div>
+        <button type="button" class="btn btn-primary" id="sendCustomNotifBtn"><i class="fa-solid fa-paper-plane"></i> সবাইকে পাঠান</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="site-footer"></div>
+
+<!-- EDIT VIDEO MODAL -->
+<div class="modal-overlay" id="videoModal">
+  <div class="modal-box">
+    <div class="modal-head"><h3>ভিডিও সম্পাদনা</h3><button class="modal-close" id="videoModalClose">&times;</button></div>
+    <form id="videoForm">
+      <div class="form-group"><label>YouTube লিংক</label><input type="text" name="url" id="videoFormUrl" required></div>
+      <div class="form-group"><label>টাইটেল</label><input type="text" name="title" id="videoFormTitle" required></div>
+      <button type="submit" class="btn btn-primary btn-block" id="videoSaveBtn">সংরক্ষণ করুন</button>
+    </form>
+  </div>
+</div>
+
+<!-- UNIVERSITY MODAL -->
+<div class="modal-overlay" id="uniModal">
+  <div class="modal-box">
+    <div class="modal-head"><h3 id="uniModalTitle">বিশ্ববিদ্যালয় যোগ করুন</h3><button class="modal-close" id="uniModalClose">&times;</button></div>
+    <form id="uniForm">
+      <div class="form-group"><label>বিশ্ববিদ্যালয়ের নাম *</label><input type="text" name="name" required></div>
+      <div class="form-row">
+        <div class="form-group"><label>আবেদন লিংক</label><input type="text" name="applyLink" placeholder="https://..."></div>
+        <div class="form-group"><label>লিংক টেক্সট</label><input type="text" name="applyLinkText" placeholder="Apply"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>ডেডলাইন কাউন্টডাউন (তারিখ ও সময়) *</label><input type="datetime-local" name="deadlineCountdown" id="deadlineCountdownInput"></div>
+        <div class="form-group"><label>ডেডলাইন (প্রদর্শিত টেক্সট)</label><input type="text" name="deadline" id="deadlineTextInput" placeholder="তারিখ বাছাই করলে এটি স্বয়ংক্রিয়ভাবে পূরণ হবে"></div>
+      </div>
+
+      <div class="form-group">
+        <label>পরীক্ষার ইউনিটসমূহ (একাধিক ইউনিট/শিফট থাকলে একাধিকবার "ইউনিট যোগ করুন" চাপুন — নাহলে একটি ইউনিট রেখে দিন)</label>
+        <div id="examUnitsWrap"></div>
+        <button type="button" class="btn btn-outline btn-sm" id="addUnitBtn" style="margin-top:4px;"><i class="fa-solid fa-plus"></i> ইউনিট যোগ করুন</button>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group"><label>নেগেটিভ মার্কিং</label><input type="text" name="negative" placeholder="0.25 / নাই"></div>
+        <div class="form-group"><label>সার্কুলার লিংক</label><input type="text" name="circularLink"></div>
+      </div>
+      <div class="form-row">
+        <div class="checkbox-row"><input type="checkbox" name="calculator" id="uniCalc"><label for="uniCalc" style="margin:0;">ক্যালকুলেটর সুবিধা আছে</label></div>
+        <div class="checkbox-row"><input type="checkbox" name="secondTime" id="uniSecond"><label for="uniSecond" style="margin:0;">সেকেন্ড টাইম সুবিধা আছে</label></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>ফলাফলের তারিখ</label><input type="text" name="resultDate"></div>
+        <div class="form-group"><label>ফলাফল লিংক</label><input type="text" name="resultLink"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>আবেদনের জন্য প্রয়োজনীয় সম্মিলিত জিপিএ (SSC+HSC)</label><input type="number" step="0.01" name="requiredGPA" placeholder="যেমনঃ 8.00"></div>
+        <div class="checkbox-row" style="margin-top:30px;"><input type="checkbox" name="active" id="uniActive" checked><label for="uniActive" style="margin:0;">সক্রিয় (ওয়েবসাইটে দেখাবে)</label></div>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block" id="uniSaveBtn">সংরক্ষণ করুন</button>
+    </form>
+  </div>
+</div>
+
+<!-- USER MODAL -->
+<div class="modal-overlay" id="userModal">
+  <div class="modal-box">
+    <div class="modal-head"><h3 id="userModalTitle">ইউজার প্রোফাইল</h3><button class="modal-close" id="userModalClose">&times;</button></div>
+    <form id="userForm">
+      <div class="form-group" id="userIdField">
+        <label>Firebase UID (নতুন প্রোফাইলের জন্য প্রয়োজন)</label>
+        <input type="text" name="uid" placeholder="Firebase Authentication থেকে UID কপি করুন">
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>নাম</label><input type="text" name="name"></div>
+        <div class="form-group"><label>ইউজারনেম</label><input type="text" name="username"></div>
+      </div>
+      <div class="form-group"><label>ইমেইল</label><input type="email" name="email"></div>
+      <div class="form-row">
+        <div class="form-group"><label>SSC জিপিএ</label><input type="number" step="0.01" name="sscGPA"></div>
+        <div class="form-group"><label>HSC জিপিএ</label><input type="number" step="0.01" name="hscGPA"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>SSC মার্ক</label><input type="number" step="0.01" name="sscMark"></div>
+        <div class="form-group"><label>HSC মার্ক</label><input type="number" step="0.01" name="hscMark"></div>
+      </div>
+      <div class="form-group">
+        <label>রোল</label>
+        <select name="role"><option value="user">User</option><option value="admin">Admin</option></select>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block" id="userSaveBtn">সংরক্ষণ করুন</button>
+    </form>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="/api/firebase-config.js"></script>
+<script src="assets/firebase-config.js"></script>
+<script src="assets/common.js"></script>
+<script src="assets/admin.js"></script>
+</body>
+</html>

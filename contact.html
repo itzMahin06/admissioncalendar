@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="bn" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>যোগাযোগ - Admission Calendar | University Admission Support</title>
+  <meta name="description" content="Admission Calendar-এ কোনো বিশ্ববিদ্যালয়ের তথ্য মিসিং বা ভুল থাকলে টেলিগ্রাম বা ইউটিউবের মাধ্যমে আমাদের সাথে যোগাযোগ করুন।">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://admissioncalender.vercel.app/contact.html">
+  <meta property="og:title" content="যোগাযোগ - Admission Calendar">
+  <meta property="og:description" content="Admission Calendar টিমের সাথে যোগাযোগ করুন — তথ্য সংশোধন বা যেকোনো প্রশ্নের জন্য।">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://admissioncalender.vercel.app/contact.html">
+  <link rel="icon" href="favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.maateen.me/solaiman-lipi/font.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="assets/common.css">
+  <style>
+    .tg-card { text-align: center; padding: 40px 24px; }
+    .tg-card i { font-size: 3rem; color: #0088cc; margin-bottom: 16px; }
+    .tg-card h2 { font-family: 'Ekushey Lal Sabuj', sans-serif; font-size: 1.2rem; margin-bottom: 8px; }
+    .tg-card p { color: var(--text-muted); font-size: .9rem; margin-bottom: 20px; }
+    .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-top: 20px; }
+    .contact-item { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 18px; display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text); transition: transform .15s, border-color .2s; }
+    .contact-item:hover { transform: translateY(-3px); border-color: var(--primary-hi); }
+    .contact-item i { font-size: 1.3rem; color: var(--primary-hi); }
+    .contact-item div span { display: block; font-size: .78rem; color: var(--text-muted); }
+  </style>
+</head>
+<body>
+<div class="bg-canvas" aria-hidden="true"><div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div></div>
+<div id="site-header"></div>
+
+<div id="app">
+  <h1 class="page-title"><i class="fa-solid fa-envelope"></i> যোগাযোগ</h1>
+  <p class="page-sub">কোনো প্রশ্ন, তথ্য মিসিং বা সাজেশন থাকলে আমাদের সাথে যোগাযোগ করুন</p>
+
+  <div class="card tg-card">
+    <i class="fa-brands fa-telegram"></i>
+    <h2>আমাদের টেলিগ্রাম গ্রুপে যোগ দিন</h2>
+    <p>সর্বশেষ আপডেট, এডমিশন নিউজ, ডেডলাইন রিমাইন্ডার ও যেকোনো সমস্যার সমাধান পেতে আমাদের
+      টেলিগ্রাম গ্রুপে যুক্ত থাকুন।</p>
+    <a href="https://t.me/mahinsclassroom" target="_blank" class="btn btn-primary" style="background:linear-gradient(135deg,#229ed9,#0088cc);">
+      <i class="fa-brands fa-telegram"></i> Telegram গ্রুপে যোগ দিন
+    </a>
+  </div>
+
+  <div class="contact-grid">
+    <a href="https://youtube.com/@itzMahin" target="_blank" class="contact-item">
+      <i class="fa-brands fa-youtube"></i>
+      <div>YouTube<span>Mahin's Classroom</span></div>
+    </a>
+    <a href="mailto:info.itzmahin@gmail.com" class="contact-item">
+      <i class="fa-solid fa-envelope"></i>
+      <div>ইমেইল<span>info.itzmahin@gmail.com</span></div>
+    </a>
+    <a href="https://t.me/mahinsclassroom" target="_blank" class="contact-item">
+      <i class="fa-brands fa-telegram"></i>
+      <div>টেলিগ্রাম<span>@mahinsclassroom</span></div>
+    </a>
+  </div>
+</div>
+
+<div id="site-footer"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="/api/firebase-config.js"></script>
+<script src="assets/firebase-config.js"></script>
+<script src="assets/common.js"></script>
+</body>
+</html>
