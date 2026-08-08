@@ -384,3 +384,183 @@ document.addEventListener('DOMContentLoaded', () => {
   renderChrome();
   initNotifBanner();
 });
+
+/* ── SHARED TOP BANNER STACK ──
+   Both the install-app banner and the notification banner live here now
+   (top of screen, stacked in normal flow) instead of being independent
+   fixed-bottom bars — this is what moves the notification prompt to the
+   top, and lets both banners coexist without overlapping each other. */
+function getTopBannerStack() {
+  let stack = document.getElementById('topBannerStack');
+  if (!stack) {
+    stack = document.createElement('div');
+    stack.id = 'topBannerStack';
+    document.body.prepend(stack);
+  }
+  return stack;
+}
+
+/* ── INSTALL APP BANNER (index.html + calendar-only.html only) ── */
+let deferredInstallPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+});
+window.addEventListener('appinstalled', () => {
+  try { localStorage.setItem('appInstalled', '1'); } catch (e) {}
+  const bar = document.getElementById('installBanner');
+  if (bar) bar.remove();
+});
+
+function isStandaloneApp() {
+  return (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) ||
+         window.navigator.standalone === true;
+}
+
+function initInstallBanner() {
+  try {
+    if (localStorage.getItem('appInstalled') === '1') return;
+  } catch (e) {}
+  if (isStandaloneApp()) return;
+
+  try {
+    const dismissedAt = localStorage.getItem('installBannerDismissed');
+    // Re-show every 1 hour if they haven't installed, as requested —
+    // shorter than the notification banner's cooldown on purpose, since
+    // installing is a much lower-commitment ask than granting a
+    // permission, so re-prompting sooner is reasonable here.
+    if (dismissedAt && (Date.now() - Number(dismissedAt)) / 3600000 < 1) return;
+  } catch (e) {}
+
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  if (!isIOS && !deferredInstallPrompt) {
+    // The browser's install-eligibility event may not have fired yet at
+    // this exact moment — give it a couple seconds and check again once,
+    // rather than giving up immediately.
+    setTimeout(() => { if (deferredInstallPrompt) showInstallBanner(isIOS); }, 2000);
+    return;
+  }
+  showInstallBanner(isIOS);
+}
+
+function showInstallBanner(isIOS) {
+  if (document.getElementById('installBanner')) return;
+  const bar = document.createElement('div');
+  bar.className = 'install-banner';
+  bar.id = 'installBanner';
+  bar.innerHTML = `
+    <img src="apple-touch-icon.png" alt="Admission Calendar" class="install-banner-logo">
+    <div class="install-banner-text">
+      <strong>Admission Calendar অ্যাপ ইনস্টল করুন</strong>
+      <span>${isIOS ? 'Share বাটনে ট্যাপ করে "Add to Home Screen" বেছে নিন' : 'দ্রুত অ্যাক্সেসের জন্য হোম স্ক্রিনে যোগ করুন'}</span>
+    </div>
+    ${isIOS ? '' : '<button class="install-banner-btn" id="installBannerBtn" type="button">ইনস্টল করুন</button>'}
+    <button class="install-banner-close" id="installBannerClose" type="button" aria-label="বন্ধ করুন"><i class="fa-solid fa-xmark"></i></button>
+  `;
+  getTopBannerStack().appendChild(bar);
+  requestAnimationFrame(() => bar.classList.add('open'));
+
+  function dismiss() {
+    bar.classList.remove('open');
+    try { localStorage.setItem('installBannerDismissed', String(Date.now())); } catch (e) {}
+    setTimeout(() => bar.remove(), 300);
+  }
+  document.getElementById('installBannerClose').addEventListener('click', dismiss);
+  const installBtn = document.getElementById('installBannerBtn');
+  if (installBtn) {
+    installBtn.addEventListener('click', async () => {
+      if (!deferredInstallPrompt) { dismiss(); return; }
+      installBtn.disabled = true;
+      deferredInstallPrompt.prompt();
+      const { outcome } = await deferredInstallPrompt.userChoice;
+      deferredInstallPrompt = null;
+      if (outcome === 'accepted') {
+        try { localStorage.setItem('appInstalled', '1'); } catch (e) {}
+      }
+      dismiss();
+    });
+  }
+}
+
+/* ── NOTIFICATION BANNER ── now appends into the shared top stack
+   instead of being its own fixed-bottom bar, so it shows at the top. */
+function initNotifBanner() {
+  if (!('Notification' in window) || !('serviceWorker' in navigator)) return;
+  if (Notification.permission === 'granted' || Notification.permission === 'denied') return;
+  if ((location.pathname.split('/').pop() || 'index.html') === 'profile.html') return;
+
+  try {
+    const dismissedAt = localStorage.getItem('notifBannerDismissed');
+    if (dismissedAt && (Date.now() - Number(dismissedAt)) / 3600000 < 72) return;
+  } catch (e) {}
+
+  setTimeout(() => {
+    const bar = document.createElement('div');
+    bar.className = 'notif-banner';
+    bar.id = 'notifBanner';
+    bar.innerHTML = `
+      <i class="fa-solid fa-bell notif-banner-icon"></i>
+      <span class="notif-banner-text">সব ভর্তি সংক্রান্ত রিমাইন্ডার পেতে নোটিফিকেশন চালু করুন</span>
+      <button class="notif-banner-btn" id="notifBannerEnable" type="button">চালু করুন</button>
+      <button class="notif-banner-close" id="notifBannerClose" type="button" aria-label="বন্ধ করুন"><i class="fa-solid fa-xmark"></i></button>
+    `;
+    getTopBannerStack().appendChild(bar);
+    requestAnimationFrame(() => bar.classList.add('open'));
+
+    function dismiss() {
+      bar.classList.remove('open');
+      try { localStorage.setItem('notifBannerDismissed', String(Date.now())); } catch (e) {}
+      setTimeout(() => bar.remove(), 300);
+    }
+    document.getElementById('notifBannerClose').addEventListener('click', dismiss);
+    document.getElementById('notifBannerEnable').addEventListener('click', async () => {
+      const enableBtn = document.getElementById('notifBannerEnable');
+      if (!('Notification' in window) || !('serviceWorker' in navigator)) {
+        showToast('আপনার ব্রাউজার নোটিফিকেশন সাপোর্ট করে না', 'fa-triangle-exclamation');
+        return;
+      }
+      enableBtn.disabled = true;
+      enableBtn.textContent = '...';
+      try {
+        const permission = await Notification.requestPermission();
+        if (permission !== 'granted') {
+          showToast('নোটিফিকেশন পারমিশন দেওয়া হয়নি', 'fa-bell-slash');
+          enableBtn.disabled = false; enableBtn.textContent = 'চালু করুন';
+          return;
+        }
+        await loadNotifModule();
+        const ok = await window.enableReminderNotifications();
+        if (ok) dismiss();
+        else { enableBtn.disabled = false; enableBtn.textContent = 'চালু করুন'; }
+      } catch (err) {
+        console.error(err);
+        showToast('নোটিফিকেশন চালু করতে সমস্যা হয়েছে: ' + (err.message || ''), 'fa-triangle-exclamation');
+        enableBtn.disabled = false;
+        enableBtn.textContent = 'চালু করুন';
+      }
+    });
+  }, 2500);
+}
+
+function loadScriptOnce(src) {
+  return new Promise((resolve, reject) => {
+    if (document.querySelector(`script[src="${src}"]`)) return resolve();
+    const s = document.createElement('script');
+    s.src = src;
+    s.onload = resolve;
+    s.onerror = () => reject(new Error('Failed to load ' + src));
+    document.head.appendChild(s);
+  });
+}
+
+async function loadNotifModule() {
+  await loadScriptOnce('https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-compat.js');
+  await loadScriptOnce('assets/notifications.js');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  renderChrome();
+  const page = location.pathname.split('/').pop() || 'index.html';
+  if (page === 'index.html' || page === 'calendar-only.html') initInstallBanner();
+  initNotifBanner();
+});
