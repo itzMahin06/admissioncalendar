@@ -522,7 +522,7 @@ tbody tr:last-child td { border-bottom: none; }
 .install-banner-text span { font-size: .72rem; color: var(--text-muted); }
 .install-banner-btn {
   padding: 7px 14px; border-radius: 8px; border: none; background: var(--primary); color: #fff;
-  font-weight: 700; font-size: .78rem; cursor: pointer; flex-shrink: 0;
+  font-weight: 700; font-size: .78rem; cursor: pointer; flex-shrink: 0; font-family: 'Ekushey Lal Sabuj';
 }
 .install-banner-close {
   background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: .95rem; flex-shrink: 0;
