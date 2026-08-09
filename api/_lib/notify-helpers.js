@@ -77,7 +77,7 @@ async function sendToTokens(tokens, title, body, url, onDeadToken) {
     const res = await messaging.sendEachForMulticast({
       tokens: chunk,
       notification: { title, body },
-      webpush: { fcmOptions: { link: url || 'https://admissioncalender.vercel.app/index.html' } }
+      webpush: { fcmOptions: { link: url || 'https://admissioncalendar.maahin.my.id/index.html' } }
     });
     sent += res.successCount;
     failed += res.failureCount;
