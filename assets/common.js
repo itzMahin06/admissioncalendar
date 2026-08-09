@@ -8,6 +8,7 @@ const LOGO_URL = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhCY
 const NAV_LINKS = [
   { href: "index.html",   label: "ক্যালেন্ডার", icon: "fa-solid fa-calendar-days" },
   { href: "videos.html",  label: "ভিডিও", icon: "fa-brands fa-youtube" },
+  { href: "telegram.html", label: "টেলিগ্রাম আপডেট", icon: "fa-brands fa-telegram" },
   { href: "about.html",   label: "আমাদের সম্পর্কে", icon: "fa-solid fa-circle-info" },
   { href: "privacy.html", label: "প্রাইভেসি", icon: "fa-solid fa-shield-halved" },
   { href: "contact.html", label: "যোগাযোগ", icon: "fa-solid fa-envelope" }
@@ -481,4 +482,3 @@ function showInstallBanner(isIOS) {
     });
   }
 }
-
