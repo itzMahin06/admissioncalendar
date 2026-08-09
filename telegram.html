@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="bn" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>টেলিগ্রাম আপডেট - Admission Calendar</title>
+  <meta name="description" content="Admission Calendar-এর টেলিগ্রাম চ্যানেলের সব পোস্ট ও আপডেট সরাসরি এখানে দেখুন — ভর্তি পরীক্ষার সর্বশেষ খবর, ডেডলাইন রিমাইন্ডার ও গুরুত্বপূর্ণ ঘোষণা।">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://admissioncalender.vercel.app/telegram.html">
+  <meta name="theme-color" content="#15803d">
+
+  <script>
+    try {
+      document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');
+    } catch (e) {}
+  </script>
+
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="favicon.ico">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.maateen.me/bangla/font.css" rel="stylesheet">
+  <link href="https://fonts.maateen.me/solaiman-lipi/font.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="assets/common.css">
+
+  <style>
+    .tg-hero {
+      display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+      background: linear-gradient(135deg, #2aabee, #229ed9);
+      border-radius: 20px; padding: 22px 24px; margin: 22px 0 20px;
+      box-shadow: 0 10px 30px rgba(34,158,217,.28);
+      animation: fadeUp .6s both;
+    }
+    .tg-hero-icon {
+      width: 58px; height: 58px; border-radius: 16px; background: rgba(255,255,255,.18);
+      display: grid; place-items: center; flex-shrink: 0;
+    }
+    .tg-hero-icon i { font-size: 1.7rem; color: #fff; }
+    .tg-hero-text { flex: 1; min-width: 220px; }
+    .tg-hero-text h1 { font-family: 'Syne', sans-serif; font-size: 1.15rem; font-weight: 800; color: #fff; margin-bottom: 4px; }
+    .tg-hero-text p { font-size: .8rem; color: rgba(255,255,255,.9); line-height: 1.5; }
+    .tg-join-btn {
+      display: inline-flex; align-items: center; gap: 8px; flex-shrink: 0;
+      background: #fff; color: #229ed9; font-weight: 800; font-size: .82rem;
+      padding: 10px 18px; border-radius: 12px; text-decoration: none;
+      transition: transform .15s, box-shadow .15s;
+    }
+    .tg-join-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,.2); }
+
+    .tg-embed-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 18px;
+      overflow: hidden; animation: fadeUp .6s .1s both;
+    }
+    .tg-embed-frame-wrap { position: relative; width: 100%; height: 680px; background: var(--surface2); }
+    .tg-embed-frame-wrap iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
+    .tg-embed-skel {
+      position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 10px; color: var(--text-muted); font-size: .82rem; pointer-events: none;
+    }
+    .tg-embed-skel i { font-size: 1.8rem; color: #229ed9; animation: tgPulse 1.4s ease-in-out infinite; }
+    @keyframes tgPulse { 0%, 100% { opacity: .4; } 50% { opacity: 1; } }
+
+    .tg-fallback {
+      display: flex; align-items: center; gap: 10px; padding: 12px 16px;
+      border-top: 1px solid var(--border); font-size: .78rem; color: var(--text-muted);
+    }
+    .tg-fallback a { color: #229ed9; font-weight: 700; text-decoration: none; }
+    .tg-fallback a:hover { text-decoration: underline; }
+
+    @media (max-width: 560px) {
+      .tg-hero { padding: 18px; }
+      .tg-hero-text h1 { font-size: 1rem; }
+      .tg-join-btn { width: 100%; justify-content: center; }
+      .tg-embed-frame-wrap { height: 560px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="bg-canvas" aria-hidden="true">
+  <div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div>
+</div>
+
+<div id="site-header"></div>
+
+<div id="app">
+  <div class="tg-hero">
+    <div class="tg-hero-icon"><i class="fa-brands fa-telegram"></i></div>
+    <div class="tg-hero-text">
+      <h1>টেলিগ্রাম আপডেট</h1>
+      <p>আমাদের টেলিগ্রাম চ্যানেলের সব পোস্ট এখানেই দেখুন — ভর্তি পরীক্ষার ডেডলাইন, পরীক্ষার তারিখ ও গুরুত্বপূর্ণ ঘোষণা সবার আগে জানতে চ্যানেলে জয়েন করুন।</p>
+    </div>
+    <a href="https://t.me/admissioncalendarbd" target="_blank" class="tg-join-btn">
+      <i class="fa-brands fa-telegram"></i> চ্যানেলে জয়েন করুন
+    </a>
+  </div>
+
+  <div class="tg-embed-card">
+    <div class="tg-embed-frame-wrap">
+      <div class="tg-embed-skel" id="tgSkel"><i class="fa-brands fa-telegram"></i><span>লোড হচ্ছে...</span></div>
+      <iframe
+        src="https://t.me/s/admissioncalendarbd"
+        title="Admission Calendar BD টেলিগ্রাম চ্যানেল"
+        loading="lazy"
+        onload="document.getElementById('tgSkel').style.display='none'">
+      </iframe>
+    </div>
+    <div class="tg-fallback">
+      <i class="fa-solid fa-circle-info"></i>
+      <span>পোস্টগুলো লোড না হলে <a href="https://t.me/admissioncalendarbd" target="_blank">t.me/admissioncalendarbd</a> সরাসরি ভিজিট করুন।</span>
+    </div>
+  </div>
+</div>
+
+<div id="site-footer"></div>
+
+<!-- Firebase (header/footer + sign-in state) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="/api/firebase-config.js"></script>
+<script src="assets/firebase-config.js"></script>
+<script src="assets/common.js"></script>
+</body>
+</html>
