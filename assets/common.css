@@ -111,7 +111,7 @@ header {
   animation: slideDown .6s cubic-bezier(.22,1,.36,1) both;
 }
 @keyframes slideDown { from { transform: translateY(-100%); opacity: 0; } }
-.brand-link { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text); font-family: 'New Rocker', sans-serif; font-size: 1.02rem; font-weight: 800; flex-shrink: 1; min-width: 0; }
+.brand-link { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text); font-family: 'New Rocker', sans-serif; font-size: 1.5rem; font-weight: 800; flex-shrink: 1; min-width: 0; }
 .brand-link img { height: 30px; border-radius: 8px; flex-shrink: 0; }
 .brand-link span { background: linear-gradient(135deg, var(--primary-hi), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
